@@ -4,7 +4,7 @@ from geometry_msgs.msg import Twist
 from turtlesim.msg import Pose
 import math
 import time
-
+from turtlesim.srv import TeleportAbsolute
 current_pose = None
 
 def pose_callback(msg):
@@ -18,7 +18,15 @@ class TurtleDrawer:
         rospy.Subscriber('/turtle1/pose', Pose, pose_callback)
         self.rate = rospy.Rate(10)
         time.sleep(2)
-
+        client = rospy.ServiceProxy('/turtle1/teleport_absolute', TeleportAbsolute)
+        req = TeleportAbsolute.Request()
+        req.x = 5.5
+        req.y = 5.5
+        req.theta = 0.0
+        try:
+            client.call(req)
+        except:
+          pass
     def move_to(self, target_x, target_y):
         """让海龟平滑移动到目标点"""
         global current_pose
